@@ -30,7 +30,7 @@ namespace CentralServices.Databases
 
         public string GetSetting(string name)
         {
-            var query = Settings.Where(set => String.Equals(set.Name, name,StringComparison.OrdinalIgnoreCase));
+            var query = Settings.Where(set => set.Name == name);
             var item = query.FirstOrDefault<Setting>();
 
             if (item != null)
@@ -41,7 +41,7 @@ namespace CentralServices.Databases
 
         public List<string> GetSettings(string name)
         {
-            var query = Settings.Where(set => String.Equals(set.Name, name, StringComparison.OrdinalIgnoreCase));
+            var query = Settings.Where(set => set.Name == name);
 
             List<string> vals = new List<string>();
             foreach (var item in query)

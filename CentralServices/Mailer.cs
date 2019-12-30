@@ -12,6 +12,28 @@ namespace CentralServices
 {
     public static class Mailer
     {
+
+        public static void SendTestMessage(string to)
+        {
+            using (var settings = new LocalSettingsDB())
+            {
+                string mailFrom = settings.GetSetting("RegMailFrom");
+                string mailTemplate = settings.GetSetting("RegMailBodyTemplate");
+                string mailSubject = settings.GetSetting("RegMailSubjectTemplate");
+
+                MailMessage message = new MailMessage(mailFrom, to, mailSubject, mailTemplate);
+                SmtpClient client = new SmtpClient(settings.GetSetting("MailSMTPServer"));
+                string smtpUser = settings.GetSetting("MailSMTPUser");
+                if (!string.IsNullOrEmpty(smtpUser))
+                {
+                    client.Credentials = new NetworkCredential(smtpUser, settings.GetSetting("MailSMTPPassword"));
+                }
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.EnableSsl = true;
+                client.SendAsync(message, null);
+            }
+        }
+
         public static void SendRegistrationEmail(User user)
         {
             using (var settings = new LocalSettingsDB())
